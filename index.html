@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini</title>
+    <style>
+        body{
+            width: 60vw;
+            height:80vh;
+            padding: 10vh 20vw;
+            margin: 0;
+        }
+        .container{
+            height:92%;
+            overflow: scroll;
+            background-color:azure;
+        }
+        ::-webkit-scrollbar{
+            display: none;
+        }
+        .bottom{
+            height:8%;
+            background-color: rgb(203, 197, 197);
+        }
+        .inputText{
+            height:100%;
+            width:80%;
+            margin:0;
+            padding:0;
+        }
+        .btn{
+            height:100%;
+            width:18.8%;
+            margin:0;
+            padding:0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="ques">
+    
+        </div>
+        <div class="bot-answer">
+    
+        </div>
+    </div>
+    <div class="bottom">
+        <input class="inputText" type="text" placeholder="Chat with GPT">
+        <button class="btn">Search</button>
+    </div>
+    <script type="importmap">
+        {
+          "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+          }
+        }
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+
+
+      <script type="module">
+        let bot=document.querySelector(".bot-answer");
+        let user=document.querySelector(".ques");
+        let btn=document.querySelector(".btn");
+        let inputText=document.querySelector(".inputText");
+        let container=document.querySelector(".container");
+        //   alert("start");
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+        
+        const API_KEY='AIzaSyB7qZpIEkpyFzF9BoA_DuQIhw-xi8vvfa4';
+        // Access your API key (see "Set up your API key" above)
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        
+        async function run() {
+  // For text-only input, use the gemini-pro model
+  const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+
+
+  const prompt = inputText.value;
+  inputText.value="";
+  console.log(prompt);
+  let div2=document.createElement("div");
+  div2.innerText=prompt;
+  div2.style.fontSize="30px";
+  div2.style.fontWeight="bold";
+  container.appendChild(div2);
+
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+  
+  const md = window.markdownit();
+  const htmlMarkup = md.render(text);
+  let div1=document.createElement("div");
+  div1.innerHTML=`${htmlMarkup}`;
+  container.appendChild(div1);
+  console.log(htmlMarkup);
+}
+
+btn.addEventListener('click',run);
+      </script>
+</body>
+</html>
