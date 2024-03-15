@@ -1,57 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemini</title>
     <style>
-        body{
-            width: 60vw;
-            height:80vh;
-            padding: 10vh 20vw;
+        body {
+            width: 50vw;
+            height: 88vh;
+            padding: 10vh 25vw 0;
             margin: 0;
+            background-color: black;
         }
-        .container{
-            height:92%;
+
+        .container {
+            height: 85%;
             overflow: scroll;
-            background-color:azure;
+            background-color: black;
+
         }
-        ::-webkit-scrollbar{
+
+        ::-webkit-scrollbar {
             display: none;
         }
-        .bottom{
-            height:8%;
-            background-color: rgb(203, 197, 197);
-        }
-        .inputText{
-            height:100%;
-            width:80%;
-            margin:0;
-            padding:0;
-        }
-        .btn{
-            height:100%;
-            width:18.8%;
-            margin:0;
-            padding:0;
+
+        .bottom {
+            display: flex;
+            justify-content: space-between;
+            height: 11%;
+            background-color: #5A5B5B;
+            border-radius: 100px;
         }
 
+        #inputText {
+            height: 100%;
+            width: 80%;
+            margin: 0;
+            padding: 0 0 0 3%;
+            outline: none;
+            background-color: #5A5B5B;
+            color: white;
+            border-top-left-radius: 100px;
+            border-bottom-left-radius: 100px;
+            font-size: 17px;
+            border: none;
+        }
+
+        ::placeholder {
+            color: white;
+        }
+
+        .btn {
+            text-align: center;
+            height: 50%;
+            width: 5%;
+            margin: 20px 25px;
+            padding: 0;
+            background-color: #5A5B5B;
+            border-radius: 50%;
+            outline: none;
+            border: none;
+        }
+        .btn:hover{
+            background-color:rgb(133, 132, 132);
+        }
+
+        .default_lower {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .item_lower {
+            width: 24%;
+            height: 200px;
+            border: 2px solid black;
+            border-radius: 15px;
+        }
+
+        .start {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background-image: linear-gradient(90deg, #5680EA, #D66675, #D66675);
+            background-clip: text;
+            color: transparent;
+            margin: 0 0 10px;
+
+        }
+
+        span {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: grey;
+        }
+
+        .policy {
+            height: 4%;
+            color: grey;
+            font-size: 14px;
+            text-align: center;
+        }
+        .material-symbols-outlined{
+            color:white;
+        }
     </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
+
 <body>
     <div class="container">
+        <div class="default">
+            <p class="start">Hello Aniket</p>
+            <span>How can I help you today?</span>
+            <div class="default_lower">
+                <div class="item_lower">a</div>
+                <div class="item_lower">b</div>
+                <div class="item_lower">c</div>
+                <div class="item_lower">d</div>
+            </div>
+        </div>
 
-        <div class="ques">
-    
-        </div>
-        <div class="bot-answer">
-    
-        </div>
+
     </div>
     <div class="bottom">
-        <input class="inputText" type="text" placeholder="Chat with GPT">
-        <button class="btn">Search</button>
+        <input id="inputText" type="text" placeholder="Chat with GPT">
+        <button class="btn"><span class="material-symbols-outlined">
+            send
+            </span></button>
+            <!-- <button onclick="startListening()">Start Listening</button> -->
+
+            <!-- <button onclick="run()">Speak</button> -->
+
     </div>
+    <p class="policy">Gemini may display inaccurate info, including about people, so double-check its responses. Your
+        privacy & Gemini Apps</p>
     <script type="importmap">
         {
           "imports": {
@@ -59,49 +142,106 @@
           }
         }
       </script>
-      <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+      <!-- <script>
+    
+// Create a new SpeechRecognition object
+const recognition = new webkitSpeechRecognition(); // For Chrome
 
+// Set some properties for the recognition
+recognition.lang = 'en-US'; // Language (optional, defaults to the browser's language)
+recognition.interimResults = true; // Whether to return interim results (partial recognition)
 
-      <script type="module">
-        let bot=document.querySelector(".bot-answer");
-        let user=document.querySelector(".ques");
-        let btn=document.querySelector(".btn");
-        let inputText=document.querySelector(".inputText");
-        let container=document.querySelector(".container");
-        //   alert("start");
-        import { GoogleGenerativeAI } from "@google/generative-ai";
-        
-        const API_KEY='AIzaSyB7qZpIEkpyFzF9BoA_DuQIhw-xi8vvfa4';
-        // Access your API key (see "Set up your API key" above)
-        const genAI = new GoogleGenerativeAI(API_KEY);
-        
-        async function run() {
-  // For text-only input, use the gemini-pro model
-  const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+// Add event listeners for recognition events
+recognition.onresult = function(event) {
+  const transcript = event.results[0][0].transcript; // Get the recognized text
+  const output = document.getElementById('inputText');
+  output.textContent += transcript;
+};
 
+recognition.onerror = function(event) {
+  console.error('Speech recognition error:', event.error);
+};
 
-  const prompt = inputText.value;
-  inputText.value="";
-  console.log(prompt);
-  let div2=document.createElement("div");
-  div2.innerText=prompt;
-  div2.style.fontSize="30px";
-  div2.style.fontWeight="bold";
-  container.appendChild(div2);
-
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
-  
-  const md = window.markdownit();
-  const htmlMarkup = md.render(text);
-  let div1=document.createElement("div");
-  div1.innerHTML=`${htmlMarkup}`;
-  container.appendChild(div1);
-  console.log(htmlMarkup);
+// Function to start listening for speech
+function startListening() {
+  recognition.start();
 }
 
-btn.addEventListener('click',run);
-      </script>
+      </script> -->
+
+    <script type="module">
+        let defaults = document.querySelector(".default");
+        let btn = document.querySelector(".btn");
+        let inputText = document.querySelector("#inputText");
+        let container = document.querySelector(".container");
+        //   alert("start");
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        const API_KEY = 'AIzaSyB7qZpIEkpyFzF9BoA_DuQIhw-xi8vvfa4';
+        // Access your API key (see "Set up your API key" above)
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        let bool = false;
+        async function run() {
+            // For text-only input, use the gemini-pro model
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            if (inputText.value != "") {
+                btn.style.background="blue";
+                bool = true;
+                if (bool) {
+                    defaults.style.display = "none";
+                }
+
+                const prompt = inputText.value;
+                inputText.value = "";
+                console.log(prompt);
+                let div2 = document.createElement("div");
+                div2.innerText = prompt;
+                div2.style.fontSize = "30px";
+                div2.style.fontWeight = "bold";
+                div2.style.color = "white";
+                // div2.style.backgroundColor = "grey";
+                div2.style.display = "inline-block";
+                div2.style.padding = "5px 10px";
+                div2.style.borderRadius = "10px";
+                container.appendChild(div2);
+                console.log(container.length);
+
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                const text = response.text();
+
+                const md = window.markdownit();
+                const htmlMarkup = md.render(text);
+                let div1 = document.createElement("div");
+                div1.style.color = "white";
+                div1.style.padding = "0 10%";
+                div1.innerHTML = `${htmlMarkup}`;
+                container.appendChild(div1);
+                console.log(htmlMarkup);
+                btn.style.background="";
+                btn.addEventListener('mouseup',()=>{
+                    btn.style.backgroundColor="rgb(133, 132, 132)";
+                });
+//                 // function speak() {
+//   // Create a new SpeechSynthesisUtterance object with the text you want to speak
+//   const message = new SpeechSynthesisUtterance(htmlMarkup);
+
+//   // Optionally, you can customize the speech properties such as voice, pitch, and rate
+//   message.voice = speechSynthesis.getVoices()[0]; // Choose a voice
+//   message.pitch = 1; // Pitch (0 to 2)
+//   message.rate = 1; // Speaking rate (0.1 to 10)
+
+//   // Use the speech synthesis API to speak the message
+//   window.speechSynthesis.speak(message);
+}
+
+            }
+        // }
+        btn.addEventListener('click', run);
+        inputText.addEventListener('change', run);
+
+    </script>
 </body>
+
 </html>
